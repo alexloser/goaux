@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/axgle/mahonia"
 )
 
 // String to int64 ignore error
@@ -110,4 +112,12 @@ func StringSliceFilter(slice []string, filter func(string) bool) []string {
 		}
 	}
 	return ret
+}
+
+func GBK2UTF8(src string) string {
+	decoder := mahonia.NewDecoder("gbk")
+	src = decoder.ConvertString(src)
+	encoder := mahonia.NewDecoder("utf-8")
+	_, cdata, _ := encoder.Translate([]byte(src), true)
+	return string(cdata)
 }
