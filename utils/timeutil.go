@@ -75,6 +75,10 @@ func weekNumber(t *time.Time, char int) int {
 	return (t.YearDay() + 6 - weekday) / 7
 }
 
+func SecondToTime(sec int64) time.Time {
+	return time.Unix(sec, 0)
+}
+
 // Strftime formats time.Date according to the directives in the given format string.
 // The directives begins with a percent (%) character.
 func Strftime(t *time.Time, f string) string {

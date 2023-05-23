@@ -82,9 +82,10 @@ func FileSize(path string) int64 {
 }
 
 // Walk in dir and return all file's FileStat
-func ListDir(name string) []FileStat {
+func ListDir(path string) []FileStat {
 	var list = make([]FileStat, 0, 10)
-	filepath.Walk(name, func(path string, _ os.FileInfo, err error) error {
+	path, _ = filepath.Abs(path)
+	filepath.Walk(path, func(path string, _ os.FileInfo, err error) error {
 		if err == nil {
 			if filepath, _ := NewFStat(path); filepath != nil {
 				list = append(list, *filepath)

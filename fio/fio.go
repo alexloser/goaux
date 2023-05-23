@@ -6,6 +6,10 @@ import (
 	"io"
 	"os"
 	"strings"
+	"syscall"
+	"time"
+
+	"github.com/alexloser/goaux/utils"
 )
 
 // Capacity in bytes
@@ -143,4 +147,16 @@ func WriteFile(path string, data interface{}) error {
 	default:
 		return errors.New("Invalid data type")
 	}
+}
+
+func GetFileTime(path string) (time.Time, time.Time, time.Time, error) {
+	finfo, err := os.Stat(path)
+	if err != nil {
+		return time.Unix(0, 0), time.Unix(0, 0), time.Unix(0, 0), err
+	}
+	winFileAttr := finfo.Sys().(*syscall.Win32FileAttributeData)
+	ctime := utils.SecondToTime(winFileAttr.CreationTime.Nanoseconds() / 1e9)
+	mtime := utils.SecondToTime(winFileAttr.LastWriteTime.Nanoseconds() / 1e9)
+	atime := utils.SecondToTime(winFileAttr.LastAccessTime.Nanoseconds() / 1e9)
+	return ctime, mtime, atime, err
 }
