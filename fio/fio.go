@@ -2,6 +2,7 @@ package fio
 
 import (
 	"bufio"
+	"errors"
 	"io"
 	"os"
 	"strings"
@@ -124,4 +125,22 @@ func HasBOM(path string) bool {
 		}
 	}
 	return false
+}
+
+func WriteFile(path string, data interface{}) error {
+	file, _ := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+	defer func() {
+		file.Sync()
+		file.Close()
+	}()
+	switch data.(type) {
+	case string:
+		file.WriteString(data.(string))
+		return nil
+	case []byte:
+		file.Write(data.([]byte))
+		return nil
+	default:
+		return errors.New("Invalid data type")
+	}
 }
