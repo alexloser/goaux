@@ -47,13 +47,13 @@ type EasyLog struct {
 }
 
 // Init global logger, if unsafe is true, dummy mutex will be used instead of sync.Mutex
-func Initialize(file *os.File, unsafe ...bool) *EasyLog {
+func Initialize(file *os.File, unsafe bool) *EasyLog {
 	if elog != nil {
 		Warn("EasyLog has already initialized!!!")
 	}
 
 	once_flag.Do(func() {
-		if len(unsafe) > 0 && unsafe[0] {
+		if unsafe {
 			elog = &EasyLog{&dummy_mutex{}, file, bytes.Buffer{}, I}
 		} else {
 			elog = &EasyLog{&sync.Mutex{}, file, bytes.Buffer{}, I}
