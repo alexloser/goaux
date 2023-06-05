@@ -1,48 +1,14 @@
 // A group of functions about file system and native api
-package sys
+package fs
 
 import (
-	"fmt"
 	"os"
-	"os/signal"
 	"os/user"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"unicode"
 )
-
-const (
-	LINUX   = "linux"
-	WINDOWS = "windows"
-	DARWIN  = "darwin"
-	UNKNOWN = "unknown"
-)
-
-func OS() string {
-	return runtime.GOOS
-}
-
-func IsWindows() bool {
-	return OS() == WINDOWS
-}
-func IsLinux() bool {
-	return OS() == LINUX
-}
-
-func Platform() string {
-	return runtime.GOOS + "-" + runtime.GOARCH
-}
-
-func IsDarwin() bool {
-	return OS() == DARWIN
-}
-
-// get GOPATH from env
-func GoPath() (dir string, ok bool) {
-	dir, ok = os.LookupEnv("GOPATH")
-	return
-}
 
 // More complete file stat struct
 type FileStat struct {
@@ -106,7 +72,7 @@ func ScanDir(name string, callback func(path string, isdir bool)) {
 
 // Get current user's home dir
 func HomeDir() (string, bool) {
-	if IsWindows() {
+	if runtime.GOOS == "windows" {
 		u, err := user.Current()
 		if err == nil {
 			return u.HomeDir, true
@@ -164,13 +130,11 @@ func IsWinRoot(path string) bool {
 
 // IsRoot check wether or not path is root of filesystem
 func IsUnixRoot(path string) bool {
-	switch OS() {
-	case WINDOWS:
+	switch runtime.GOOS {
+	case "windows":
 		return IsWinRoot(path)
-	case LINUX, DARWIN:
-		return path == "/"
 	default:
-		return false
+		return path == "/"
 	}
 }
 
@@ -205,39 +169,4 @@ func DirExist(path string) bool {
 func IsSymlink(fname string) bool {
 	_, err := os.Lstat(fname)
 	return err == nil
-}
-
-// a simple signal notifier
-func RegistSignalHandler(handler func(os.Signal), signals ...os.Signal) {
-	go func() {
-		c := make(chan os.Signal, 1)
-		signal.Notify(c, signals...)
-		s := <-c
-		handler(s)
-	}()
-}
-
-// Return stack list for printing
-func StackInfo(full bool) string {
-	var buf [4096]byte
-	n := runtime.Stack(buf[:], full)
-	return string(buf[:n])
-}
-
-// Print stack info
-func PrintStack() {
-	fmt.Fprintf(os.Stderr, "%s\n", StackInfo(false))
-}
-
-// Call this only in main once
-func RunTimeInit(max_num_threads int) {
-	if max_num_threads == 0 {
-		if runtime.NumCPU() == 1 {
-			runtime.GOMAXPROCS(1)
-		} else {
-			runtime.GOMAXPROCS(runtime.NumCPU()/2 + 1)
-		}
-	} else {
-		runtime.GOMAXPROCS(max_num_threads)
-	}
 }
