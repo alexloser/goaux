@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alexloser/goaux/system"
+	"github.com/alexloser/goaux/fs"
 )
 
 func TestFio(t *testing.T) {
-	name := system.GrandName(system.ExpandAbs(os.Args[len(os.Args)-1])) + string(os.PathSeparator) + "README.md"
-	if !system.FileExist(name) {
+	name := fs.GrandName(fs.ExpandAbs(os.Args[len(os.Args)-1])) + string(os.PathSeparator) + "README.md"
+	if !fs.FileExist(name) {
 		t.Logf(name)
 		t.Error(name)
 		return

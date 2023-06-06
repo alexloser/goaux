@@ -9,7 +9,7 @@ import (
 )
 
 func TestEasyLog(t *testing.T) {
-	var log = Initialize(os.Stdout)
+	var log = Initialize(os.Stdout, true)
 	SetLevel(0)
 
 	Debug("debug", "foo")
@@ -34,7 +34,7 @@ func TestEasyLog(t *testing.T) {
 	Assert(3 == E)
 	Assert(4 == F)
 
-	var dup = Initialize(os.Stdout)
+	var dup = Initialize(os.Stdout, true)
 	AssertNoExit(log == dup)
 
 	b := bytes.Buffer{}
