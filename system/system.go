@@ -74,3 +74,19 @@ func RunTimeInit(max_num_threads int) {
 		runtime.GOMAXPROCS(max_num_threads)
 	}
 }
+
+func ChangeWorkDir(dir string, verbose bool) error {
+	cwd, _ := os.Getwd()
+	if cwd == dir {
+		return nil
+	}
+	err := os.Chdir(dir)
+	if err != nil {
+		return err
+	}
+	cwd, _ = os.Getwd()
+	if verbose {
+		fmt.Fprintf(os.Stderr, "Working directory changed: %s", cwd)
+	}
+	return nil
+}
