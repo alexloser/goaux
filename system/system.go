@@ -86,7 +86,7 @@ func ChangeWorkDir(dir string, verbose bool) error {
 	}
 	cwd, _ = os.Getwd()
 	if verbose {
-		fmt.Fprintf(os.Stderr, "Working directory changed: %s", cwd)
+		fmt.Fprintf(os.Stderr, "Working directory changed: %s\n", cwd)
 	}
 	return nil
 }
