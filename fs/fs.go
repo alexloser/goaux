@@ -170,3 +170,11 @@ func IsSymlink(fname string) bool {
 	_, err := os.Lstat(fname)
 	return err == nil
 }
+
+// Make new directory
+func MakeDir(path string, allparents bool) error {
+	if allparents {
+		return os.MkdirAll(path, os.ModePerm)
+	}
+	return os.Mkdir(path, os.ModePerm)
+}
