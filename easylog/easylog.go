@@ -85,19 +85,20 @@ func Flush() {
 // Join all log prefix
 func Join(buf *bytes.Buffer, level int, name string, line int) string {
 	buf.Reset()
+	buf.WriteByte('[')
 	buf.WriteString(time.Now().String()[:23])
 
 	switch level {
 	case D:
-		buf.WriteString(" D [")
+		buf.WriteString(" D] ")
 	case I:
-		buf.WriteString(" I [")
+		buf.WriteString(" I] ")
 	case W:
-		buf.WriteString(" W [")
+		buf.WriteString(" W] ")
 	case E:
-		buf.WriteString(" E [")
+		buf.WriteString(" E] ")
 	case F:
-		buf.WriteString(" F [")
+		buf.WriteString(" F] ")
 	}
 
 	buf.WriteString(strconv.Itoa(os.Getpid()))
@@ -105,7 +106,7 @@ func Join(buf *bytes.Buffer, level int, name string, line int) string {
 	buf.WriteString(name)
 	buf.WriteByte(':')
 	buf.WriteString(strconv.Itoa(line))
-	buf.WriteString("] ")
+	buf.WriteByte(' ')
 
 	return buf.String()
 }

@@ -2,4 +2,4 @@ module github.com/alexloser/goaux
 
 go 1.20
 
-require github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
+require golang.org/x/text v0.14.0

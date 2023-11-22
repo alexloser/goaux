@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/axgle/mahonia"
+	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
 // String to int64 ignore error
@@ -22,6 +22,12 @@ func Atoi64(s string) int64 {
 	return n
 }
 
+// String to int64 ignore error
+func Atoi(s string) int {
+	n, _ := strconv.Atoi(s)
+	return n
+}
+
 // Int64 to string
 func Itoa32(i int32) string {
 	return strconv.FormatInt(int64(i), 10)
@@ -30,6 +36,11 @@ func Itoa32(i int32) string {
 // Int64 to string
 func Itoa64(i int64) string {
 	return strconv.FormatInt(i, 10)
+}
+
+// Int to string
+func Itoa(i int) string {
+	return strconv.Itoa(i)
 }
 
 // String to int64 ignore error
@@ -114,10 +125,10 @@ func StringSliceFilter(slice []string, filter func(string) bool) []string {
 	return ret
 }
 
-func GBK2UTF8(src string) string {
-	decoder := mahonia.NewDecoder("gbk")
-	src = decoder.ConvertString(src)
-	encoder := mahonia.NewDecoder("utf-8")
-	_, cdata, _ := encoder.Translate([]byte(src), true)
-	return string(cdata)
+func GBK2UTF8(src string) (string, error) {
+	utf, err := simplifiedchinese.GBK.NewDecoder().String(src)
+	if err != nil {
+		return "", err
+	}
+	return utf, err
 }
